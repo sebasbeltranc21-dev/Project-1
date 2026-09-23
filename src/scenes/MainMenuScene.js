@@ -61,7 +61,6 @@ export default class MainMenuScene extends Phaser.Scene {
 
     startButton.on("pointerdown", () => {
       this.audio.unlock();
-      this.audio.unlock();
       this.scene.start("WorldMapScene");
     });
 
@@ -74,7 +73,7 @@ export default class MainMenuScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.add
-      .text(width / 2, 620, "FASE 6 • MUNDO Y NIVELES", {
+      .text(width / 2, 620, "FASE 8 • JEFE FINAL", {
         fontFamily: "Arial, sans-serif",
         fontSize: "18px",
         color: "#69718f"
@@ -82,7 +81,7 @@ export default class MainMenuScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.input.keyboard.once("keydown-ENTER", () => {
-      this.scene.start("Level1Scene");
+      this.scene.start("WorldMapScene");
     });
   }
 }
