@@ -99,6 +99,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     if (jumpPressed && (onGround || this.coyoteTimer > 0)) {
       this.setVelocityY(this.jumpVelocity);
       this.coyoteTimer = 0;
+      this.scene.audio?.jump();
     }
 
     this.shieldFx.setPosition(this.x, this.y);
