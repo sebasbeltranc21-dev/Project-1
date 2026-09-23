@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import { getProgress } from "../systems/Progress.js";
+import AudioSystem from "../systems/AudioSystem.js";
 
 export default class WorldMapScene extends Phaser.Scene {
   constructor() {
@@ -9,6 +10,9 @@ export default class WorldMapScene extends Phaser.Scene {
   create() {
     const { width, height } = this.scale;
     this.progress = getProgress();
+    this.audio = new AudioSystem(this);
+    this.audio.startMusic();
+    this.events.once("shutdown", () => this.audio.destroy());
     this.selectIndex = Math.min(this.progress.unlockedLevel - 1, 1);
     this.cards = [];
 
@@ -38,7 +42,7 @@ export default class WorldMapScene extends Phaser.Scene {
     this.createLevelCard(330, 350, 1, "PRADERA NEON", "Nivel inicial", 0x36d399);
     this.createLevelCard(950, 350, 2, "CAVERNAS CRISTAL", "Nivel desbloqueable", 0x8f7bff);
 
-    this.add.text(width / 2, 620, "A/D o ←/→ para elegir • ENTER para entrar • ESC para volver", {
+    this.add.text(width / 2, 620, "A/D o ←/→ para elegir • ENTER para entrar • ESC para volver • M • AUDIO", {
       fontFamily: "Arial",
       fontSize: "19px",
       color: "#b8bfd8"
@@ -50,6 +54,9 @@ export default class WorldMapScene extends Phaser.Scene {
     this.input.keyboard.on("keydown-D", () => this.moveSelection(1));
     this.input.keyboard.on("keydown-ENTER", () => this.openSelected());
     this.input.keyboard.on("keydown-ESC", () => this.scene.start("MainMenuScene"));
+    this.input.keyboard.on("keydown-M", () => {
+      this.audio.setEnabled(!this.audio.enabled);
+    });
 
     this.refreshCards();
   }
@@ -158,6 +165,7 @@ export default class WorldMapScene extends Phaser.Scene {
       return;
     }
 
+    this.audio.unlock();
     this.scene.start(levelNumber === 1 ? "Level1Scene" : "Level2Scene");
   }
 
