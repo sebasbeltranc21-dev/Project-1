@@ -107,7 +107,7 @@ export default class Level1Scene extends Phaser.Scene {
     this.enemies.getChildren().forEach((enemy) => enemy.update());
 
     if (this.player.y > 820) {
-      this.respawnPlayer();
+      this.loseLife("CAÍSTE");
     }
 
     this.updateHud(time);
