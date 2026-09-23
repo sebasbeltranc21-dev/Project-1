@@ -335,10 +335,12 @@ export default class Level2Scene extends Phaser.Scene {
     if (type === "speed") {
       this.speedBoostUntil = this.time.now + 7000;
       this.player.setSpeedMultiplier(1.45);
+      this.audio.powerUp("speed");
       this.showMessage("⚡ IMPULSO");
     } else {
       this.shieldUntil = this.time.now + 8000;
       this.player.setShieldActive(true);
+      this.audio.powerUp("shield");
       this.showMessage("🛡️ ESCUDO");
     }
     this.score += 300;
