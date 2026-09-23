@@ -55,7 +55,7 @@ export default class MainMenuScene extends Phaser.Scene {
       startLabel.setScale(1);
     });
 
-    startButton.on("pointerdown", () => this.scene.start("Level1Scene"));
+    startButton.on("pointerdown", () => this.scene.start("WorldMapScene"));
 
     this.add
       .text(width / 2, 515, "ENTER o clic en JUGAR", {
@@ -66,7 +66,7 @@ export default class MainMenuScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.add
-      .text(width / 2, 620, "FASE 5 • POWER-UPS", {
+      .text(width / 2, 620, "FASE 6 • MUNDO Y NIVELES", {
         fontFamily: "Arial, sans-serif",
         fontSize: "18px",
         color: "#69718f"
