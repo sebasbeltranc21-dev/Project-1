@@ -50,8 +50,9 @@ export default class PrototypeScene extends Phaser.Scene {
     }
 
     for (let x = 0; x < this.worldWidth; x += 360) {
-      this.add.rectangle(x + 180, 560, 300, 130, 0x67b977, 0.9);
-      this.add.triangle(x + 105, 510, 105, 120, 210, 0, 315, 120, 0x4d9f68, 1);
+      this.add.ellipse(x + 180, 615, 380, 210, 0x4d9f68, 1);
+      this.add.ellipse(x + 40, 635, 220, 150, 0x67b977, 0.9);
+      this.add.ellipse(x + 330, 635, 220, 150, 0x67b977, 0.9);
     }
 
     this.add.text(42, 30, "FASE 2 • MOVIMIENTO", {
