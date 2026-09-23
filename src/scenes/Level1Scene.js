@@ -4,6 +4,7 @@ import Coin from "../entities/Coin.js";
 import Checkpoint from "../entities/Checkpoint.js";
 import Enemy from "../entities/Enemy.js";
 import Hazard from "../entities/Hazard.js";
+import PowerUp from "../entities/PowerUp.js";
 
 export default class Level1Scene extends Phaser.Scene {
   constructor() {
@@ -22,6 +23,8 @@ export default class Level1Scene extends Phaser.Scene {
     this.gameOver = false;
     this.invulnerableUntil = 0;
     this.startTime = this.time.now;
+    this.speedBoostUntil = 0;
+    this.shieldUntil = 0;
 
     this.physics.world.setBounds(0, 0, this.worldWidth, this.worldHeight);
     this.cameras.main.setBounds(0, 0, this.worldWidth, 720);
@@ -45,6 +48,9 @@ export default class Level1Scene extends Phaser.Scene {
 
     this.hazards = this.physics.add.staticGroup();
     this.createHazards();
+
+    this.powerUps = this.physics.add.group();
+    this.createPowerUps();
 
     this.createGoal();
     this.createHud();
@@ -73,6 +79,13 @@ export default class Level1Scene extends Phaser.Scene {
     );
     this.physics.add.overlap(
       this.player,
+      this.powerUps,
+      this.collectPowerUp,
+      undefined,
+      this
+    );
+    this.physics.add.overlap(
+      this.player,
       this.goal,
       this.finishLevel,
       undefined,
@@ -89,6 +102,7 @@ export default class Level1Scene extends Phaser.Scene {
   update(time, delta) {
     if (this.levelFinished || this.gameOver) return;
 
+    this.updatePowerUpEffects(time);
     this.player.update(delta);
     this.enemies.getChildren().forEach((enemy) => enemy.update());
 
@@ -255,6 +269,75 @@ export default class Level1Scene extends Phaser.Scene {
     });
   }
 
+  createPowerUps() {
+    [
+      [680, 610, "speed"],
+      [1050, 435, "shield"],
+      [1530, 475, "speed"],
+      [2020, 610, "shield"],
+      [2720, 420, "speed"],
+      [3320, 610, "shield"],
+      [3820, 415, "speed"],
+      [4710, 450, "shield"]
+    ].forEach(([x, y, type]) => {
+      this.powerUps.add(new PowerUp(this, x, y, type));
+    });
+  }
+
+  collectPowerUp(player, powerUp) {
+    if (!powerUp.active || this.levelFinished || this.gameOver) return;
+
+    const type = powerUp.type;
+    powerUp.collect();
+
+    if (type === "speed") {
+      this.speedBoostUntil = Math.max(this.speedBoostUntil, this.time.now + 7000);
+      this.player.setSpeedMultiplier(1.45);
+      this.showMessage("⚡ IMPULSO • VELOCIDAD +45%");
+    } else {
+      this.shieldUntil = Math.max(this.shieldUntil, this.time.now + 8000);
+      this.player.setShieldActive(true);
+      this.showMessage("🛡️ ESCUDO • PROTECCIÓN ACTIVA");
+    }
+
+    this.score += 300;
+
+    this.tweens.add({
+      targets: this.player,
+      scale: 1.18,
+      duration: 100,
+      yoyo: true
+    });
+  }
+
+  updatePowerUpEffects(now) {
+    if (this.speedBoostUntil > 0 && now >= this.speedBoostUntil) {
+      this.speedBoostUntil = 0;
+      this.player.setSpeedMultiplier(1);
+      this.showMessage("IMPULSO TERMINADO");
+    }
+
+    if (this.shieldUntil > 0 && now >= this.shieldUntil) {
+      this.shieldUntil = 0;
+      this.player.setShieldActive(false);
+      this.showMessage("ESCUDO TERMINADO");
+    }
+  }
+
+  getPowerUpStatus(now) {
+    const status = [];
+
+    if (this.speedBoostUntil > now) {
+      status.push("⚡ " + Math.ceil((this.speedBoostUntil - now) / 1000) + "s");
+    }
+
+    if (this.shieldUntil > now) {
+      status.push("🛡️ " + Math.ceil((this.shieldUntil - now) / 1000) + "s");
+    }
+
+    return status.length ? "   •   " + status.join("  ") : "";
+  }
+
   createGoal() {
     const goal = this.add.rectangle(5100, 610, 56, 150, 0xffffff, 0.18)
       .setStrokeStyle(4, 0xffd34e);
@@ -308,7 +391,8 @@ export default class Level1Scene extends Phaser.Scene {
       "VIDAS: " + this.lives +
       "   •   🪙 " + this.coinsCollected +
       "   •   ⭐ " + this.score +
-      "   •   ⏱ " + minutes + ":" + seconds
+      "   •   ⏱ " + minutes + ":" + seconds +
+      this.getPowerUpStatus(now)
     );
   }
 
@@ -363,12 +447,34 @@ export default class Level1Scene extends Phaser.Scene {
       return;
     }
 
+    if (this.player.shieldActive) {
+      this.consumeShield();
+      enemy.defeat();
+      player.setVelocityY(-380);
+      this.score += 200;
+      this.showMessage("🛡️ ¡ESCUDO BLOQUEÓ EL GOLPE!");
+      return;
+    }
+
     this.loseLife("¡CUIDADO!");
   }
 
   hitHazard() {
     if (this.time.now < this.invulnerableUntil || this.levelFinished || this.gameOver) return;
+
+    if (this.player.shieldActive) {
+      this.consumeShield();
+      this.player.setVelocityY(-320);
+      this.showMessage("🛡️ ¡ESCUDO BLOQUEÓ LA TRAMPA!");
+      return;
+    }
+
     this.loseLife("¡TRAMPA!");
+  }
+
+  consumeShield() {
+    this.shieldUntil = 0;
+    this.player.setShieldActive(false);
   }
 
   loseLife(reason) {
@@ -376,6 +482,9 @@ export default class Level1Scene extends Phaser.Scene {
 
     this.lives -= 1;
     this.invulnerableUntil = this.time.now + 1300;
+    this.speedBoostUntil = 0;
+    this.shieldUntil = 0;
+    this.player.clearPowerUps();
     this.cameras.main.shake(180, 0.012);
     this.cameras.main.flash(180, 255, 80, 80);
     this.showMessage(reason + "  •  VIDAS: " + this.lives);
@@ -502,6 +611,7 @@ export default class Level1Scene extends Phaser.Scene {
     this.player.setVelocity(0, 0);
     this.player.setScale(1);
     this.player.setAlpha(1);
+    this.player.clearPowerUps();
     this.cameras.main.flash(180, 255, 255, 255);
 
     this.tweens.killTweensOf(this.player);
