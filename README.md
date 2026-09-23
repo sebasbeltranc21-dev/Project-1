@@ -15,7 +15,7 @@ Videojuego web de plataformas 2D inspirado en los clásicos del género, con ide
 2. ✅ Movimiento del personaje
 3. ✅ Primer nivel jugable
 4. ✅ Enemigos y peligros
-5. ⏳ Power-ups
+5. ✅ Power-ups
 6. ⏳ Mundo y niveles
 7. ⏳ HUD, audio y pulido
 8. ⏳ Jefe final
@@ -31,7 +31,7 @@ Videojuego web de plataformas 2D inspirado en los clásicos del género, con ide
 
 ## Estado actual
 
-**Fase 4 completada:** enemigos patrullando, derrota por salto, daño por contacto, peligros de pinchos, sistema de vidas, invulnerabilidad temporal, respawn en checkpoint y pantalla de GAME OVER.
+**Fase 5 completada:** power-ups de Impulso y Escudo, efectos temporales, protección contra peligros/enemigos y estados visibles en el HUD.
 
 ## Ejecutar localmente
 
