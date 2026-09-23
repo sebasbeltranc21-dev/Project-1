@@ -53,7 +53,7 @@ La URL prevista de GitHub Pages es:
 
 `https://sebasbeltranc21-dev.github.io/Project-1/`
 
-En GitHub, entra a **Settings → Pages** y selecciona **GitHub Actions** como origen de compilación/implementación. Después de eso, cada push a `main` podrá publicar automáticamente la versión nueva. GitHub documenta este flujo con `configure-pages`, `upload-pages-artifact` y `deploy-pages`. 
+En GitHub, entra a **Settings → Pages** y selecciona **GitHub Actions** como origen de compilación/implementación. El workflow de Pages se ejecuta con cada push a `main`. 
 
 
 ## Ejecutar localmente
