@@ -1,5 +1,8 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: "./"
+  base: "/Project-1/",
+  build: {
+    sourcemap: false
+  }
 });
