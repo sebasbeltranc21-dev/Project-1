@@ -60,7 +60,7 @@ export default class Level1Scene extends Phaser.Scene {
 
     this.createGoal();
     this.createHud();
-    this.pauseOverlay = createPauseOverlay(this);
+    this.pauseOverlay = createPauseOverlay(this, "P • CONTINUAR  •  ESC • MAPA  •  M • AUDIO");
     this.vignette = createVignette(this);
     this.vignette.setFillStyle(0x000000, 0);
     this.events.once("shutdown", () => this.audio.destroy());
@@ -152,7 +152,7 @@ export default class Level1Scene extends Phaser.Scene {
       color: "#10213c"
     }).setScrollFactor(0).setDepth(20);
 
-    this.add.text(42, 63, "A/D o ←/→ • SHIFT correr • ESPACIO/W/↑ saltar", {
+    this.add.text(42, 63, "A/D o ←/→ • SHIFT correr • ESPACIO/W/↑ saltar • P pausa • M audio", {
       fontFamily: "Arial",
       fontSize: "17px",
       color: "#214061"
