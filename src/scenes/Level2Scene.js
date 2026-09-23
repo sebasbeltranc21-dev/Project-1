@@ -104,17 +104,29 @@ export default class Level2Scene extends Phaser.Scene {
     }
 
     for (let x = 120; x < this.worldWidth; x += 410) {
-      this.add.polygon([
-        x - 35, 170,
-        x - 4, 85,
-        x + 15, 170
-      ], 0x66f0dc, 0.32);
+      this.add.polygon(
+        x,
+        0,
+        [
+          -35, 170,
+          -4, 85,
+          15, 170
+        ],
+        0x66f0dc,
+        0.32
+      );
 
-      this.add.polygon([
-        x + 60, 190,
-        x + 90, 105,
-        x + 110, 190
-      ], 0x8f7bff, 0.26);
+      this.add.polygon(
+        x + 85,
+        0,
+        [
+          -25, 190,
+          5, 105,
+          25, 190
+        ],
+        0x8f7bff,
+        0.26
+      );
     }
 
     this.add.text(42, 28, "NOVA • NIVEL 2", {
