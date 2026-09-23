@@ -2,6 +2,8 @@ import Phaser from "phaser";
 import Player from "../entities/Player.js";
 import Coin from "../entities/Coin.js";
 import Checkpoint from "../entities/Checkpoint.js";
+import Enemy from "../entities/Enemy.js";
+import Hazard from "../entities/Hazard.js";
 
 export default class Level1Scene extends Phaser.Scene {
   constructor() {
@@ -15,7 +17,10 @@ export default class Level1Scene extends Phaser.Scene {
     this.respawnPoint = { ...this.spawnPoint };
     this.score = 0;
     this.coinsCollected = 0;
+    this.lives = 3;
     this.levelFinished = false;
+    this.gameOver = false;
+    this.invulnerableUntil = 0;
     this.startTime = this.time.now;
 
     this.physics.world.setBounds(0, 0, this.worldWidth, this.worldHeight);
@@ -34,6 +39,13 @@ export default class Level1Scene extends Phaser.Scene {
     this.checkpoints = this.physics.add.group();
     this.createCheckpoints();
 
+    this.enemies = this.physics.add.group();
+    this.createEnemies();
+    this.physics.add.collider(this.enemies, this.platforms);
+
+    this.hazards = this.physics.add.staticGroup();
+    this.createHazards();
+
     this.createGoal();
     this.createHud();
 
@@ -42,6 +54,20 @@ export default class Level1Scene extends Phaser.Scene {
       this.player,
       this.checkpoints,
       this.touchCheckpoint,
+      undefined,
+      this
+    );
+    this.physics.add.overlap(
+      this.player,
+      this.enemies,
+      this.handleEnemyCollision,
+      undefined,
+      this
+    );
+    this.physics.add.overlap(
+      this.player,
+      this.hazards,
+      this.hitHazard,
       undefined,
       this
     );
@@ -64,6 +90,7 @@ export default class Level1Scene extends Phaser.Scene {
     if (this.levelFinished) return;
 
     this.player.update(delta);
+    this.enemies.getChildren().forEach((enemy) => enemy.update());
 
     if (this.player.y > 820) {
       this.respawnPlayer();
@@ -196,6 +223,38 @@ export default class Level1Scene extends Phaser.Scene {
     });
   }
 
+  createEnemies() {
+    const enemies = [
+      [430, 620, 310, 485],
+      [875, 420, 815, 975],
+      [1400, 620, 1190, 1505],
+      [1780, 380, 1690, 1870],
+      [2140, 470, 2015, 2325],
+      [2640, 420, 2510, 2690],
+      [3220, 335, 3080, 3280],
+      [3790, 415, 3660, 3870],
+      [4220, 335, 4110, 4300],
+      [4700, 450, 4575, 4780]
+    ];
+
+    enemies.forEach(([x, y, minX, maxX]) => {
+      this.enemies.add(new Enemy(this, x, y, minX, maxX));
+    });
+  }
+
+  createHazards() {
+    [
+      [1080, 640, 72],
+      [2200, 640, 90],
+      [2910, 640, 72],
+      [3440, 640, 90],
+      [4435, 640, 72],
+      [4850, 640, 90]
+    ].forEach(([x, y, width]) => {
+      this.hazards.add(new Hazard(this, x, y, width));
+    });
+  }
+
   createGoal() {
     const goal = this.add.rectangle(5100, 610, 56, 150, 0xffffff, 0.18)
       .setStrokeStyle(4, 0xffd34e);
@@ -246,7 +305,8 @@ export default class Level1Scene extends Phaser.Scene {
     const seconds = String(elapsed % 60).padStart(2, "0");
 
     this.hud.setText(
-      "🪙 " + this.coinsCollected +
+      "VIDAS: " + this.lives +
+      "   •   🪙 " + this.coinsCollected +
       "   •   ⭐ " + this.score +
       "   •   ⏱ " + minutes + ":" + seconds
     );
@@ -289,8 +349,102 @@ export default class Level1Scene extends Phaser.Scene {
     });
   }
 
+  handleEnemyCollision(player, enemy) {
+    if (!enemy.active || enemy.isDefeated || this.time.now < this.invulnerableUntil) return;
+
+    const falling = player.body.velocity.y > 0;
+    const stomp = falling && player.body.bottom <= enemy.body.top + 16;
+
+    if (stomp) {
+      enemy.defeat();
+      player.setVelocityY(-520);
+      this.score += 250;
+      this.showMessage("¡ENEMIGO DERROTADO!");
+      return;
+    }
+
+    this.loseLife("¡CUIDADO!");
+  }
+
+  hitHazard() {
+    if (this.time.now < this.invulnerableUntil || this.levelFinished || this.gameOver) return;
+    this.loseLife("¡TRAMPA!");
+  }
+
+  loseLife(reason) {
+    if (this.time.now < this.invulnerableUntil || this.levelFinished || this.gameOver) return;
+
+    this.lives -= 1;
+    this.invulnerableUntil = this.time.now + 1300;
+    this.cameras.main.shake(180, 0.012);
+    this.cameras.main.flash(180, 255, 80, 80);
+    this.showMessage(reason + "  •  VIDAS: " + this.lives);
+
+    if (this.lives <= 0) {
+      this.showGameOver();
+      return;
+    }
+
+    this.respawnPlayer();
+  }
+
+  showMessage(text) {
+    this.message.setText(text);
+    this.message.setAlpha(1);
+    this.tweens.killTweensOf(this.message);
+
+    this.tweens.add({
+      targets: this.message,
+      alpha: 0,
+      delay: 900,
+      duration: 450,
+      onComplete: () => {
+        this.message.setAlpha(1);
+        this.message.setText("");
+      }
+    });
+  }
+
+  showGameOver() {
+    this.gameOver = true;
+    this.player.setVelocity(0, 0);
+    this.physics.pause();
+
+    this.add.rectangle(640, 360, 620, 330, 0x10152b, 0.95)
+      .setScrollFactor(0)
+      .setDepth(50)
+      .setStrokeStyle(5, 0xe84d5b);
+
+    this.add.text(640, 245, "GAME OVER", {
+      fontFamily: "Arial Black",
+      fontSize: "54px",
+      color: "#ffffff",
+      stroke: "#000000",
+      strokeThickness: 8
+    }).setOrigin(0.5).setScrollFactor(0).setDepth(51);
+
+    this.add.text(
+      640,
+      330,
+      "NOVA se quedó sin vidas.\nTu puntuación: " + this.score,
+      {
+        fontFamily: "Arial",
+        fontSize: "26px",
+        color: "#8fe7ff",
+        align: "center",
+        lineSpacing: 12
+      }
+    ).setOrigin(0.5).setScrollFactor(0).setDepth(51);
+
+    this.add.text(640, 445, "ENTER • REINTENTAR    |    ESC • MENÚ", {
+      fontFamily: "Arial Black",
+      fontSize: "19px",
+      color: "#36d399"
+    }).setOrigin(0.5).setScrollFactor(0).setDepth(51);
+  }
+
   finishLevel() {
-    if (this.levelFinished) return;
+    if (this.levelFinished || this.gameOver) return;
 
     this.levelFinished = true;
     this.player.setVelocity(0, 0);
@@ -335,7 +489,7 @@ export default class Level1Scene extends Phaser.Scene {
   }
 
   restartAfterFinish() {
-    if (!this.levelFinished) return;
+    if (!this.levelFinished && !this.gameOver) return;
     this.scene.restart();
   }
 
@@ -347,6 +501,21 @@ export default class Level1Scene extends Phaser.Scene {
     this.player.setPosition(this.respawnPoint.x, this.respawnPoint.y);
     this.player.setVelocity(0, 0);
     this.player.setScale(1);
+    this.player.setAlpha(1);
     this.cameras.main.flash(180, 255, 255, 255);
+
+    this.tweens.killTweensOf(this.player);
+    this.tweens.add({
+      targets: this.player,
+      alpha: 0.35,
+      duration: 90,
+      yoyo: true,
+      repeat: 6,
+      onComplete: () => {
+        if (this.player.active && !this.gameOver) {
+          this.player.setAlpha(1);
+        }
+      }
+    });
   }
 }
