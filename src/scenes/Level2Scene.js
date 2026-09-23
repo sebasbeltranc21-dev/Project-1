@@ -457,8 +457,7 @@ export default class Level2Scene extends Phaser.Scene {
       strokeThickness: 8
     }).setOrigin(0.5).setScrollFactor(0).setDepth(51);
 
-    this.add.text(640, 330, "NOVA se quedó sin vidas.
-Puntuación: " + this.score, {
+    this.add.text(640, 330, "NOVA se quedó sin vidas.\nPuntuación: " + this.score, {
       fontFamily: "Arial",
       fontSize: "26px",
       color: "#8fe7ff",
@@ -499,10 +498,8 @@ Puntuación: " + this.score, {
     }).setOrigin(0.5).setScrollFactor(0).setDepth(51);
 
     this.add.text(640, 330,
-      "Monedas: " + this.coinsCollected + "
-" +
-      "Tiempo: " + elapsed + " s
-" +
+      "Monedas: " + this.coinsCollected + "\n" +
+      "Tiempo: " + elapsed + " s\n" +
       "Puntuación: " + finalScore,
       {
         fontFamily: "Arial",
