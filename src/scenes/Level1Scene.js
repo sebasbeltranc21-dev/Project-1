@@ -188,8 +188,8 @@ export default class Level1Scene extends Phaser.Scene {
 
   createCheckpoints() {
     [
-      [1200, 590],
-      [2920, 590],
+      [1100, 590],
+      [3140, 590],
       [4140, 590]
     ].forEach(([x, y]) => {
       this.checkpoints.add(new Checkpoint(this, x, y));
