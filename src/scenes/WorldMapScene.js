@@ -64,11 +64,11 @@ export default class WorldMapScene extends Phaser.Scene {
   }
 
   createPath() {
-    this.add.line(430, 350, 0, 0, 1, 0, 0xc9d1e8, 0.35)
+    this.add.line(430, 350, -210, 0, 210, 0, 0xc9d1e8, 0.35)
       .setLineWidth(8)
       .setDepth(1);
 
-    this.add.line(850, 350, 0, 0, 1, 0, 0xc9d1e8, 0.35)
+    this.add.line(850, 350, -210, 0, 210, 0, 0xc9d1e8, 0.35)
       .setLineWidth(8)
       .setDepth(1);
 
