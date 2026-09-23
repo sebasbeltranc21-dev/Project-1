@@ -121,6 +121,27 @@ export default class AudioSystem {
     this.tone(293.66, 0.24, "sawtooth", 0.12, 0.14);
   }
 
+  bossAttack() {
+    this.tone(180, 0.10, "sawtooth", 0.10);
+  }
+
+  bossHit() {
+    this.tone(260, 0.07, "square", 0.14);
+    this.tone(390, 0.11, "triangle", 0.12, 0.05);
+  }
+
+  bossPhase() {
+    [220, 277.18, 329.63, 440].forEach((note, index) => {
+      this.tone(note, 0.16, "sawtooth", 0.10, index * 0.09);
+    });
+  }
+
+  bossDefeat() {
+    [392, 523.25, 659.25, 783.99, 1046.5].forEach((note, index) => {
+      this.tone(note, 0.20, "triangle", 0.12, index * 0.11);
+    });
+  }
+
   startMusic() {
     if (!this.enabled || this.musicTimer) return;
 
