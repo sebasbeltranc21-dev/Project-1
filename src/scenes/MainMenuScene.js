@@ -61,6 +61,7 @@ export default class MainMenuScene extends Phaser.Scene {
 
     startButton.on("pointerdown", () => {
       this.audio.unlock();
+      this.audio.unlock();
       this.scene.start("WorldMapScene");
     });
 
