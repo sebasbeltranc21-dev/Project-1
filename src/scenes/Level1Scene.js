@@ -272,11 +272,11 @@ export default class Level1Scene extends Phaser.Scene {
   createPowerUps() {
     [
       [680, 610, "speed"],
-      [1050, 435, "shield"],
+      [1000, 435, "shield"],
       [1530, 475, "speed"],
       [2020, 610, "shield"],
-      [2720, 420, "speed"],
-      [3320, 610, "shield"],
+      [2450, 610, "speed"],
+      [3260, 610, "shield"],
       [3820, 415, "speed"],
       [4710, 450, "shield"]
     ].forEach(([x, y, type]) => {
