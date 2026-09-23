@@ -18,7 +18,7 @@ Videojuego web de plataformas 2D inspirado en los clásicos del género, con ide
 4. ✅ Enemigos y peligros
 5. ✅ Power-ups
 6. ✅ Mundo y niveles
-7. ⏳ HUD, audio y pulido
+7. ✅ HUD, audio y pulido
 8. ⏳ Jefe final
 9. ⏳ Optimización y publicación
 
@@ -29,6 +29,8 @@ Videojuego web de plataformas 2D inspirado en los clásicos del género, con ide
 - **ESPACIO / W / ↑**: saltar.
 - **ENTER**: entrar al nivel seleccionado o continuar.
 - **R**: repetir nivel al terminar.
+- **P**: pausar/continuar.
+- **M**: activar/desactivar audio.
 - **ESC**: volver al mapa.
 
 ## Progreso
@@ -42,7 +44,7 @@ El mapa guarda el desbloqueo en el navegador. Al completar un nivel, el siguient
 
 ## Estado actual
 
-**Fase 6 completada:** mapa de aventura, selección de niveles, progreso persistente, desbloqueo secuencial y un segundo nivel con temática propia.
+**Fase 7 completada:** HUD mejorado, música y efectos generados con Web Audio, pausa, control de audio y feedback visual en ambos niveles.
 
 ## Ejecutar localmente
 
