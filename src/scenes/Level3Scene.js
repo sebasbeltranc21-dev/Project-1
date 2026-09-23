@@ -130,8 +130,8 @@ export default class Level3Scene extends Phaser.Scene {
     this.addPlatform(1950, 500, 300, 30);
     this.addPlatform(2520, 470, 260, 30);
 
-    this.add.wall = this.add.rectangle(110, 360, 70, 720, 0x211a3c);
-    this.add.wall2 = this.add.rectangle(3090, 360, 70, 720, 0x211a3c);
+    this.add.rectangle(110, 360, 70, 720, 0x211a3c);
+    this.add.rectangle(3090, 360, 70, 720, 0x211a3c);
 
     this.add.text(1600, 165, "ASTRAX • GUARDIÁN DEL NÚCLEO", {
       fontFamily: "Arial Black",
@@ -411,8 +411,7 @@ export default class Level3Scene extends Phaser.Scene {
       strokeThickness: 8
     }).setOrigin(0.5).setScrollFactor(0).setDepth(51);
 
-    this.add.text(640, 315, "ASTRAX ha caído.
-NOVA ha salvado el Mundo 1.", {
+    this.add.text(640, 315, "ASTRAX ha caído.\nNOVA ha salvado el Mundo 1.", {
       fontFamily: "Arial",
       fontSize: "27px",
       color: "#8fe7ff",
@@ -421,8 +420,7 @@ NOVA ha salvado el Mundo 1.", {
     }).setOrigin(0.5).setScrollFactor(0).setDepth(51);
 
     this.add.text(640, 405,
-      "Monedas: " + this.coinsCollected + "
-" +
+      "Monedas: " + this.coinsCollected + "\n" +
       "Puntuación: " + this.score,
       {
         fontFamily: "Arial",
