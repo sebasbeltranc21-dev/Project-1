@@ -66,7 +66,7 @@ export default class MainMenuScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.add
-      .text(width / 2, 620, "FASE 4 • ENEMIGOS Y PELIGROS", {
+      .text(width / 2, 620, "FASE 5 • POWER-UPS", {
         fontFamily: "Arial, sans-serif",
         fontSize: "18px",
         color: "#69718f"
