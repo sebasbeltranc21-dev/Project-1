@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import AudioSystem from "../systems/AudioSystem.js";
 
 export default class MainMenuScene extends Phaser.Scene {
   constructor() {
@@ -7,6 +8,9 @@ export default class MainMenuScene extends Phaser.Scene {
 
   create() {
     const { width, height } = this.scale;
+    this.audio = new AudioSystem(this);
+    this.audio.startMusic();
+    this.events.once("shutdown", () => this.audio.destroy());
 
     this.add
       .rectangle(width / 2, height / 2, width, height, 0x10152b)
@@ -55,7 +59,10 @@ export default class MainMenuScene extends Phaser.Scene {
       startLabel.setScale(1);
     });
 
-    startButton.on("pointerdown", () => this.scene.start("WorldMapScene"));
+    startButton.on("pointerdown", () => {
+      this.audio.unlock();
+      this.scene.start("WorldMapScene");
+    });
 
     this.add
       .text(width / 2, 515, "ENTER o clic en JUGAR", {
