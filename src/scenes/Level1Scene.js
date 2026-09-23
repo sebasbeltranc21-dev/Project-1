@@ -87,7 +87,7 @@ export default class Level1Scene extends Phaser.Scene {
   }
 
   update(time, delta) {
-    if (this.levelFinished) return;
+    if (this.levelFinished || this.gameOver) return;
 
     this.player.update(delta);
     this.enemies.getChildren().forEach((enemy) => enemy.update());
