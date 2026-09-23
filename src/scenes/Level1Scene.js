@@ -417,6 +417,7 @@ export default class Level1Scene extends Phaser.Scene {
     coin.collect();
     this.coinsCollected += 1;
     this.score += 100;
+    this.audio.coin();
 
     this.tweens.add({
       targets: this.player,
@@ -483,6 +484,7 @@ export default class Level1Scene extends Phaser.Scene {
     if (this.player.shieldActive) {
       this.consumeShield();
       this.player.setVelocityY(-320);
+      this.audio.powerUp("shield");
       this.showMessage("🛡️ ¡ESCUDO BLOQUEÓ LA TRAMPA!");
       return;
     }
