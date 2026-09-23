@@ -19,7 +19,7 @@ Videojuego web de plataformas 2D inspirado en los clásicos del género, con ide
 5. ✅ Power-ups
 6. ✅ Mundo y niveles
 7. ✅ HUD, audio y pulido
-8. ⏳ Jefe final
+8. ✅ Jefe final
 9. ⏳ Optimización y publicación
 
 ## Controles
@@ -41,10 +41,11 @@ El mapa guarda el desbloqueo en el navegador. Al completar un nivel, el siguient
 
 - **1 — Pradera Neon:** nivel exterior con plataformas, enemigos, pinchos y power-ups.
 - **2 — Cavernas Cristal:** nivel interior con plataformas más estrechas y una ambientación diferente.
+- **3 — Arena del Núcleo:** combate final contra Astrax en una arena cerrada con tres fases.
 
 ## Estado actual
 
-**Fase 7 completada:** HUD mejorado, música y efectos generados con Web Audio, pausa, control de audio y feedback visual en ambos niveles.
+**Fase 8 completada:** jefe Astrax con 18 PV, tres fases de ataque, proyectiles, barra de vida, arena final y pantalla de victoria.
 
 ## Ejecutar localmente
 
