@@ -12,7 +12,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.setOrigin(0.5, 0.5);
     this.setCollideWorldBounds(true);
     this.setDragX(1400);
-    this.setMaxVelocity(520, 1000);
+    this.setMaxVelocity(720, 1000);
     this.body.setSize(34, 54);
     this.body.setOffset(15, 12);
 
@@ -29,6 +29,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.jumpVelocity = -640;
     this.coyoteWindow = 110;
     this.coyoteTimer = 0;
+    this.speedMultiplier = 1;
+    this.shieldActive = false;
+    this.shieldFx = scene.add.ellipse(this.x, this.y, 76, 92, 0x4b7bff, 0.16)
+      .setStrokeStyle(3, 0x8fe7ff, 0.9)
+      .setDepth(6)
+      .setVisible(false);
 
     scene.anims.create({
       key: "hero-idle",
@@ -71,7 +77,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     const left = this.cursors.left.isDown || this.keys.left.isDown;
     const right = this.cursors.right.isDown || this.keys.right.isDown;
     const running = this.cursors.shift.isDown || this.keys.run.isDown;
-    const speed = running ? this.runSpeed : this.walkSpeed;
+    const speed = (running ? this.runSpeed : this.walkSpeed) * this.speedMultiplier;
 
     if (left && !right) {
       this.setVelocityX(-speed);
@@ -95,6 +101,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       this.coyoteTimer = 0;
     }
 
+    this.shieldFx.setPosition(this.x, this.y);
+    this.shieldFx.setVisible(this.shieldActive);
+
     if (!onGround) {
       this.play("hero-jump", true);
     } else if (Math.abs(this.body.velocity.x) > 25) {
@@ -102,6 +111,20 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     } else {
       this.play("hero-idle", true);
     }
+  }
+
+  setSpeedMultiplier(value) {
+    this.speedMultiplier = Phaser.Math.Clamp(value, 1, 1.6);
+  }
+
+  setShieldActive(value) {
+    this.shieldActive = value;
+    this.shieldFx.setVisible(value);
+  }
+
+  clearPowerUps() {
+    this.setSpeedMultiplier(1);
+    this.setShieldActive(false);
   }
 
   static createTextures(scene) {
