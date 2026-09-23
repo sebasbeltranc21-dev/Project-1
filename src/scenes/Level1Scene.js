@@ -6,6 +6,8 @@ import Enemy from "../entities/Enemy.js";
 import Hazard from "../entities/Hazard.js";
 import PowerUp from "../entities/PowerUp.js";
 import { completeLevel } from "../systems/Progress.js";
+import AudioSystem from "../systems/AudioSystem.js";
+import { createPauseOverlay, createVignette, flashPlayer } from "../systems/Polish.js";
 
 export default class Level1Scene extends Phaser.Scene {
   constructor() {
@@ -26,6 +28,9 @@ export default class Level1Scene extends Phaser.Scene {
     this.startTime = this.time.now;
     this.speedBoostUntil = 0;
     this.shieldUntil = 0;
+    this.isPaused = false;
+    this.audio = new AudioSystem(this);
+    this.audio.startMusic();
 
     this.physics.world.setBounds(0, 0, this.worldWidth, this.worldHeight);
     this.cameras.main.setBounds(0, 0, this.worldWidth, 720);
@@ -55,6 +60,10 @@ export default class Level1Scene extends Phaser.Scene {
 
     this.createGoal();
     this.createHud();
+    this.pauseOverlay = createPauseOverlay(this);
+    this.vignette = createVignette(this);
+    this.vignette.setFillStyle(0x000000, 0);
+    this.events.once("shutdown", () => this.audio.destroy());
 
     this.physics.add.overlap(this.player, this.coins, this.collectCoin, undefined, this);
     this.physics.add.overlap(
@@ -99,10 +108,12 @@ export default class Level1Scene extends Phaser.Scene {
     this.input.keyboard.on("keydown-ESC", this.returnToMap, this);
     this.input.keyboard.on("keydown-ENTER", this.continueAfterFinish, this);
     this.input.keyboard.on("keydown-R", this.restartLevel, this);
+    this.input.keyboard.on("keydown-P", this.togglePause, this);
+    this.input.keyboard.on("keydown-M", this.toggleAudio, this);
   }
 
   update(time, delta) {
-    if (this.levelFinished || this.gameOver) return;
+    if (this.levelFinished || this.gameOver || this.isPaused) return;
 
     this.updatePowerUpEffects(time);
     this.player.update(delta);
@@ -295,10 +306,12 @@ export default class Level1Scene extends Phaser.Scene {
     if (type === "speed") {
       this.speedBoostUntil = Math.max(this.speedBoostUntil, this.time.now + 7000);
       this.player.setSpeedMultiplier(1.45);
+      this.audio.powerUp("speed");
       this.showMessage("⚡ IMPULSO • VELOCIDAD +45%");
     } else {
       this.shieldUntil = Math.max(this.shieldUntil, this.time.now + 8000);
       this.player.setShieldActive(true);
+      this.audio.powerUp("shield");
       this.showMessage("🛡️ ESCUDO • PROTECCIÓN ACTIVA");
     }
 
@@ -421,6 +434,7 @@ export default class Level1Scene extends Phaser.Scene {
       y: checkpoint.y - 75
     };
     this.score += 500;
+    this.audio.checkpoint();
 
     this.message.setText("CHECKPOINT ACTIVADO");
     this.tweens.add({
@@ -445,6 +459,7 @@ export default class Level1Scene extends Phaser.Scene {
       enemy.defeat();
       player.setVelocityY(-520);
       this.score += 250;
+      this.audio.enemyDefeat();
       this.showMessage("¡ENEMIGO DERROTADO!");
       return;
     }
@@ -454,6 +469,7 @@ export default class Level1Scene extends Phaser.Scene {
       enemy.defeat();
       player.setVelocityY(-380);
       this.score += 200;
+      this.audio.enemyDefeat();
       this.showMessage("🛡️ ¡ESCUDO BLOQUEÓ EL GOLPE!");
       return;
     }
@@ -489,6 +505,7 @@ export default class Level1Scene extends Phaser.Scene {
     this.player.clearPowerUps();
     this.cameras.main.shake(180, 0.012);
     this.cameras.main.flash(180, 255, 80, 80);
+    this.audio.damage();
     this.showMessage(reason + "  •  VIDAS: " + this.lives);
 
     if (this.lives <= 0) {
@@ -518,6 +535,8 @@ export default class Level1Scene extends Phaser.Scene {
 
   showGameOver() {
     this.gameOver = true;
+    this.audio.gameOver();
+    this.audio.stopMusic();
     this.player.setVelocity(0, 0);
     this.physics.pause();
 
@@ -559,6 +578,8 @@ export default class Level1Scene extends Phaser.Scene {
 
     this.levelFinished = true;
     completeLevel(1);
+    this.audio.victory();
+    this.audio.stopMusic();
     this.player.setVelocity(0, 0);
     this.physics.pause();
 
@@ -615,7 +636,30 @@ export default class Level1Scene extends Phaser.Scene {
   }
 
   returnToMap() {
+    this.audio.stopMusic();
     this.scene.start("WorldMapScene");
+  }
+
+  togglePause() {
+    if (this.levelFinished || this.gameOver) return;
+    this.isPaused = !this.isPaused;
+    this.pauseOverlay.setVisible(this.isPaused);
+    this.vignette.setFillStyle(0x000000, this.isPaused ? 0.42 : 0);
+
+    if (this.isPaused) {
+      this.physics.pause();
+      this.tweens.pauseAll();
+      this.audio.stopMusic();
+    } else {
+      this.physics.resume();
+      this.tweens.resumeAll();
+      this.audio.startMusic();
+    }
+  }
+
+  toggleAudio() {
+    this.audio.setEnabled(!this.audio.enabled);
+    this.showMessage(this.audio.enabled ? "🔊 AUDIO ACTIVADO" : "🔇 AUDIO DESACTIVADO");
   }
 
   respawnPlayer() {
