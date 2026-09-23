@@ -20,7 +20,7 @@ Videojuego web de plataformas 2D inspirado en los clásicos del género, con ide
 6. ✅ Mundo y niveles
 7. ✅ HUD, audio y pulido
 8. ✅ Jefe final
-9. ⏳ Optimización y publicación
+9. ✅ Optimización y publicación
 
 ## Controles
 
@@ -45,7 +45,16 @@ El mapa guarda el desbloqueo en el navegador. Al completar un nivel, el siguient
 
 ## Estado actual
 
-**Fase 8 completada:** jefe Astrax con 18 PV, tres fases de ataque, proyectiles, barra de vida, arena final y pantalla de victoria.
+**Fase 9 completada:** configuración para GitHub Pages, build optimizado para producción, despliegue automático desde `main` y validación separada para Pull Requests.
+
+## Publicación
+
+La URL prevista de GitHub Pages es:
+
+`https://sebasbeltranc21-dev.github.io/Project-1/`
+
+En GitHub, entra a **Settings → Pages** y selecciona **GitHub Actions** como origen de compilación/implementación. Después de eso, cada push a `main` podrá publicar automáticamente la versión nueva. GitHub documenta este flujo con `configure-pages`, `upload-pages-artifact` y `deploy-pages`. 
+
 
 ## Ejecutar localmente
 
