@@ -102,14 +102,15 @@ export default class WorldMapScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     card.on("pointerdown", () => {
-      if (!locked) {
+      if (!this.cards.find((item) => item.number === number)?.locked) {
         this.selectIndex = number - 1;
         this.openSelected();
       }
     });
 
     card.on("pointerover", () => {
-      if (!locked) {
+      const currentCard = this.cards.find((item) => item.number === number);
+      if (currentCard && !currentCard.locked) {
         this.selectIndex = number - 1;
         this.refreshCards();
       }
