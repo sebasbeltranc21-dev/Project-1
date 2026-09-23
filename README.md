@@ -7,14 +7,14 @@ Videojuego web de plataformas 2D inspirado en los clásicos del género, con ide
 - **Phaser 3** — motor y física 2D.
 - **JavaScript** — lógica del juego.
 - **Vite** — desarrollo y build.
-- **GitHub Pages** — publicación prevista.
+- **GitHub Actions** — verificación automática del build.\n- **GitHub Pages** — publicación prevista.
 
 ## Fases
 
 1. ✅ Fundación
 2. ✅ Movimiento del personaje
 3. ✅ Primer nivel jugable
-4. ⏳ Enemigos y peligros
+4. ✅ Enemigos y peligros
 5. ⏳ Power-ups
 6. ⏳ Mundo y niveles
 7. ⏳ HUD, audio y pulido
@@ -31,7 +31,7 @@ Videojuego web de plataformas 2D inspirado en los clásicos del género, con ide
 
 ## Estado actual
 
-**Fase 3 completada:** primer nivel jugable con monedas, puntuación, temporizador, checkpoints, respawn, meta y pantalla de victoria.
+**Fase 4 completada:** enemigos patrullando, derrota por salto, daño por contacto, peligros de pinchos, sistema de vidas, invulnerabilidad temporal, respawn en checkpoint y pantalla de GAME OVER.
 
 ## Ejecutar localmente
 
@@ -41,3 +41,5 @@ npm run dev
 ```
 
 Después abre la dirección local que muestre Vite.
+
+Cada push a `main` ejecuta un build automático con GitHub Actions para detectar errores de compilación.
