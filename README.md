@@ -7,7 +7,8 @@ Videojuego web de plataformas 2D inspirado en los clásicos del género, con ide
 - **Phaser 3** — motor y física 2D.
 - **JavaScript** — lógica del juego.
 - **Vite** — desarrollo y build.
-- **GitHub Actions** — verificación automática del build.\n- **GitHub Pages** — publicación prevista.
+- **GitHub Actions** — verificación automática del build.
+- **GitHub Pages** — publicación prevista.
 
 ## Fases
 
@@ -16,7 +17,7 @@ Videojuego web de plataformas 2D inspirado en los clásicos del género, con ide
 3. ✅ Primer nivel jugable
 4. ✅ Enemigos y peligros
 5. ✅ Power-ups
-6. ⏳ Mundo y niveles
+6. ✅ Mundo y niveles
 7. ⏳ HUD, audio y pulido
 8. ⏳ Jefe final
 9. ⏳ Optimización y publicación
@@ -26,12 +27,22 @@ Videojuego web de plataformas 2D inspirado en los clásicos del género, con ide
 - **A / D** o **← / →**: mover.
 - **SHIFT**: correr.
 - **ESPACIO / W / ↑**: saltar.
-- **ESC**: volver al menú.
-- **ENTER**: reiniciar tras completar el nivel.
+- **ENTER**: entrar al nivel seleccionado o continuar.
+- **R**: repetir nivel al terminar.
+- **ESC**: volver al mapa.
+
+## Progreso
+
+El mapa guarda el desbloqueo en el navegador. Al completar un nivel, el siguiente se desbloquea automáticamente y el progreso puede sobrevivir a una recarga.
+
+## Niveles actuales
+
+- **1 — Pradera Neon:** nivel exterior con plataformas, enemigos, pinchos y power-ups.
+- **2 — Cavernas Cristal:** nivel interior con plataformas más estrechas y una ambientación diferente.
 
 ## Estado actual
 
-**Fase 5 completada:** power-ups de Impulso y Escudo, efectos temporales, protección contra peligros/enemigos y estados visibles en el HUD.
+**Fase 6 completada:** mapa de aventura, selección de niveles, progreso persistente, desbloqueo secuencial y un segundo nivel con temática propia.
 
 ## Ejecutar localmente
 
@@ -40,6 +51,10 @@ npm install
 npm run dev
 ```
 
-Después abre la dirección local que muestre Vite.
+Para comprobar el build:
 
-Cada push a `main` ejecuta un build automático con GitHub Actions para detectar errores de compilación.
+```bash
+npm run build
+```
+
+Cada push a `main` ejecuta un build automático con GitHub Actions.
