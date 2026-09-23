@@ -215,7 +215,7 @@ export default class Level1Scene extends Phaser.Scene {
 
   createCheckpoints() {
     [
-      [1100, 590],
+      [1180, 590],
       [3140, 590],
       [4140, 590]
     ].forEach(([x, y]) => {
@@ -229,7 +229,7 @@ export default class Level1Scene extends Phaser.Scene {
       [875, 420, 815, 975],
       [1400, 620, 1190, 1505],
       [1780, 380, 1690, 1870],
-      [2140, 470, 2015, 2325],
+      [2140, 470, 2015, 2215],
       [2640, 420, 2510, 2690],
       [3220, 335, 3080, 3280],
       [3790, 415, 3660, 3870],
@@ -244,12 +244,12 @@ export default class Level1Scene extends Phaser.Scene {
 
   createHazards() {
     [
-      [1080, 640, 72],
-      [2200, 640, 90],
-      [2910, 640, 72],
-      [3440, 640, 90],
+      [930, 640, 72],
+      [2030, 640, 90],
+      [2920, 640, 72],
+      [3510, 640, 90],
       [4435, 640, 72],
-      [4850, 640, 90]
+      [4870, 640, 90]
     ].forEach(([x, y, width]) => {
       this.hazards.add(new Hazard(this, x, y, width));
     });
