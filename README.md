@@ -13,7 +13,7 @@ Videojuego web de plataformas 2D inspirado en los clásicos del género, con ide
 
 1. ✅ Fundación
 2. ✅ Movimiento del personaje
-3. ⏳ Primer nivel jugable
+3. ✅ Primer nivel jugable
 4. ⏳ Enemigos y peligros
 5. ⏳ Power-ups
 6. ⏳ Mundo y niveles
@@ -21,12 +21,17 @@ Videojuego web de plataformas 2D inspirado en los clásicos del género, con ide
 8. ⏳ Jefe final
 9. ⏳ Optimización y publicación
 
-## Controles actuales
+## Controles
 
 - **A / D** o **← / →**: mover.
 - **SHIFT**: correr.
 - **ESPACIO / W / ↑**: saltar.
 - **ESC**: volver al menú.
+- **ENTER**: reiniciar tras completar el nivel.
+
+## Estado actual
+
+**Fase 3 completada:** primer nivel jugable con monedas, puntuación, temporizador, checkpoints, respawn, meta y pantalla de victoria.
 
 ## Ejecutar localmente
 
@@ -36,9 +41,3 @@ npm run dev
 ```
 
 Después abre la dirección local que muestre Vite.
-
-## Estado actual
-
-**Fase 2 completada:** protagonista original generado por código, movimiento, carrera, salto, gravedad, colisiones, animaciones, cámara con seguimiento y respawn al caer.
-
-La siguiente etapa será convertir este prototipo en el primer nivel completo, con coleccionables, checkpoints y meta.
