@@ -5,6 +5,7 @@ import Checkpoint from "../entities/Checkpoint.js";
 import Enemy from "../entities/Enemy.js";
 import Hazard from "../entities/Hazard.js";
 import PowerUp from "../entities/PowerUp.js";
+import { completeLevel } from "../systems/Progress.js";
 
 export default class Level1Scene extends Phaser.Scene {
   constructor() {
@@ -95,8 +96,9 @@ export default class Level1Scene extends Phaser.Scene {
     this.cameras.main.startFollow(this.player, true, 0.09, 0.09);
     this.cameras.main.setDeadzone(420, 180);
 
-    this.input.keyboard.on("keydown-ESC", this.returnToMenu, this);
-    this.input.keyboard.on("keydown-ENTER", this.restartAfterFinish, this);
+    this.input.keyboard.on("keydown-ESC", this.returnToMap, this);
+    this.input.keyboard.on("keydown-ENTER", this.continueAfterFinish, this);
+    this.input.keyboard.on("keydown-R", this.restartLevel, this);
   }
 
   update(time, delta) {
@@ -556,6 +558,7 @@ export default class Level1Scene extends Phaser.Scene {
     if (this.levelFinished || this.gameOver) return;
 
     this.levelFinished = true;
+    completeLevel(1);
     this.player.setVelocity(0, 0);
     this.physics.pause();
 
@@ -590,20 +593,29 @@ export default class Level1Scene extends Phaser.Scene {
       }
     ).setOrigin(0.5).setScrollFactor(0).setDepth(51);
 
-    this.add.text(640, 455, "ENTER • JUGAR DE NUEVO    |    ESC • MENÚ", {
+    this.add.text(640, 455, "ENTER • MAPA    |    R • REPETIR    |    ESC • MENÚ", {
       fontFamily: "Arial Black",
       fontSize: "19px",
       color: "#36d399"
     }).setOrigin(0.5).setScrollFactor(0).setDepth(51);
   }
 
-  restartAfterFinish() {
+  continueAfterFinish() {
+    if (!this.levelFinished && !this.gameOver) return;
+    if (this.levelFinished) {
+      this.scene.start("WorldMapScene");
+    } else {
+      this.scene.restart();
+    }
+  }
+
+  restartLevel() {
     if (!this.levelFinished && !this.gameOver) return;
     this.scene.restart();
   }
 
-  returnToMenu() {
-    this.scene.start("MainMenuScene");
+  returnToMap() {
+    this.scene.start("WorldMapScene");
   }
 
   respawnPlayer() {
